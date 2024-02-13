@@ -18,7 +18,79 @@ class Distancia:
     def calcular(self):
         return math.sqrt(((self.x2-self.x1)**2)+((self.y2-self.y1)**2))
          
+class CalcularResistencia:
+    b1 = ''
+    b2 = ''
+    b3 = ''
+    r = 0
+    valor = 0
+    vMax = 0
+    vMin = 0
+    c1 = ''
+    c2 = ''
+    c3 = ''
+    cr = ''
+
+    def __init__(self, z, y, x, w):
+        self.b1 = z
+        self.b2 = y
+        self.b3 = x
+        self.r = w
+    
+    def calR(self):
+
+        colores = {
+            'Negro':'#000000', 
+            'Cafe':'#A18262', 
+            'Rojo':'#FF0000', 
+            'Naranja':'#FF8000', 
+            'Amarillo':'#FFFF00', 
+            'Verde':'#1CF000',
+            'Azul':'#0000FF ', 
+            'Violeta':'#4C2882',
+            'Gris':'#9B9B9B',
+            'Blanco':'#FFFFFF',
+            'Oro':'#FFBF00 ',
+            'Plata':'#E3E4E5'
+            }
         
+        val1 = {
+            'Negro':'0', 
+            'Cafe':'1', 
+            'Rojo':'2', 
+            'Naranja':'3', 
+            'Amarillo':'4', 
+            'Verde':'5',
+            'Azul':'6', 
+            'Violeta':'7',
+            'Gris':'8',
+            'Blanco':'9'
+            }
+        
+        val2 = {
+            'Negro':1, 
+            'Cafe':10, 
+            'Rojo':100, 
+            'Naranja':1000, 
+            'Amarillo':10000, 
+            'Verde':100000,
+            'Azul':1000000, 
+            'Violeta':10000000,
+            'Gris':100000000,
+            'Blanco':1000000000,
+            'Oro':5,
+            'Plata':10
+            }
+        v=val1[self.b1] + val1[self.b2]
+        re=val2[self.r]
+        valor = int(v) * val2[self.b3]
+        vMax = valor + ((valor*re)/100)
+        vMin = valor - ((valor*re)/100)
+        c1 = colores[self.b1]
+        c2 = colores[self.b2]
+        c3 = colores[self.b3]
+        cr = colores[self.r]
+        return valor, vMax, vMin, c1, c2, c3, cr
 
 app=Flask(__name__)
 def index():
@@ -59,6 +131,27 @@ def alumnos():
         res = obj.calcular()
         print(res)
     return render_template("distancia.html", form=cal_form, res=res)
+
+@app.route("/resistencia", methods=["GET", "POST"])
+def resi():
+    os.system('cls')
+    valor = 0 
+    vMax= 0
+    vMin=0
+    c1=''
+    c2=''
+    c3=''
+    cr=''
+    cal_form=forms.ResistenciaForm(request.form)
+    if request.method=='POST':
+        b1=cal_form.banda1.data
+        b2=cal_form.banda2.data
+        b3=cal_form.banda3.data
+        r=cal_form.resColor.data
+        obj=CalcularResistencia(b1,b2,b3,r)
+        valor,vMax,vMin, c1, c2, c3, cr = obj.calR()
+    return render_template("resistencia.html", form=cal_form, valor=valor, vMax=vMax, vMin=vMin, c1=c1, c2=c2,c3=c3,cr=cr)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

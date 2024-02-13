@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{%block content%}
+
+{%import "_macros.html" as macros%}
+<style>
+    #tdC1 {
+        background-color: {{c1}};
+    }
+
+    #tdC2 {
+        background-color: {{c2}};
+    }
+
+    #tdC3 {
+        background-color: {{c3}};
+    }
+
+    #tdCr {
+        background-color: {{cr}};
+    }
+</style>
+<h1>Resistencia</h1>
+<form action="" method="post">
+
+    <div class="container" style="display: flex">
+        <div class="form-group">
+            <label>Primera Banda</label>
+            {{macros.input_Form(form.banda1,class="form-control")}}
+        </div>
+        <div class="form-group">
+            <label>Segunda Banda</label>
+            {{macros.input_Form(form.banda2,class="form-control")}}
+        </div>
+        <div class="form-group">
+            <label>Tercera Banda</label>
+            {{macros.input_Form(form.banda3,class="form-control")}}
+        </div>
+    </div>
+
+    <div class="container" style="display: flex">
+        <div class="form-group">
+            <div class="col">
+                Resistencia
+                {{macros.input_Form(form.resColor,class="form-control")}}
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="display: flex">
+        <div class="form-group">
+            <button type="submit" name="btnR">Registrar</button>
+        </div>
+    </div>
+</form>
+
+<table class="table">
+    <tr>
+        <th>Color 1</th>
+        <th>Color 2</th>
+        <th>Color 3</th>
+        <th>Tolerancia</th>
+        <th>Valor</th>
+        <th>Valor Maximo</th>
+        <th>Valor Minimo</th>
+    </tr>
+    <tr>
+        <td id="tdC1"></td>
+        <td id="tdC2"> </td>
+        <td id="tdC3"></td>
+        <td id="tdCr"></td>
+        <td>{{valor}}</td>
+        <td>{{vMax}}</td>
+        <td>{{vMin}}</td>
+    </tr>
+</table>
+
+{% endblock%}
