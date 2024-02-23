@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 import forms
 import math
 import os
+from io import open
 class Distancia:
     x1 = 0
     y1 = 0
@@ -81,6 +82,7 @@ class CalcularResistencia:
             'Oro':5,
             'Plata':10
             }
+        
         v=val1[self.b1] + val1[self.b2]
         re=val2[self.r]
         valor = int(v) * val2[self.b3]
@@ -92,6 +94,50 @@ class CalcularResistencia:
         cr = colores[self.r]
         return valor, vMax, vMin, c1, c2, c3, cr
 
+
+class saveDiccionaro:
+    english = ''
+    espanol = ''
+    palabra = ''
+
+    def __init__(self, e, s):
+        self.english = e
+        self.espanol = s
+    
+    def dicciG(self):
+        en = self.english
+        es = self.espanol
+
+        archivo_texto=open('D:\IDGS802_practicas\practicas-Parcial1-IDGS802\dconro.txt','a')
+        archivo_texto.write(f'\n {en} : {es} ,')
+        archivo_texto.close
+        return
+
+class readDiccionaro:
+    palabra = ''
+    r = ''
+
+    def __init__(self, p, r):
+        self.palabra = p
+        self.idioma = r
+
+    def dicciG(self):
+        with open('D:\IDGS802_practicas\practicas-Parcial1-IDGS802\dconro.txt','r') as archivo_texto:
+            file_content = archivo_texto.read()
+            for line in file_content.strip().split(','):
+                print(line)
+                if self.palabra in line:
+                    print(self.palabra)
+                    print(self.idioma)
+                    if self.idioma == "Español":
+                        trlns = line.split(':')[1]
+                    elif self.idioma == "Ingles":
+                        trlns = line.split(':')[0]        
+                    break
+                else:
+                    trlns = f"No se encontro la palabra {self.palabra}" 
+        return trlns
+                    
 app=Flask(__name__)
 def index():
     return render_template("layout.html")
@@ -152,6 +198,26 @@ def resi():
         valor,vMax,vMin, c1, c2, c3, cr = obj.calR()
     return render_template("resistencia.html", form=cal_form, valor=valor, vMax=vMax, vMin=vMin, c1=c1, c2=c2,c3=c3,cr=cr)
 
+@app.route("/diccionario",methods=["GET","POST"])
+def dicci():
+    os.system('cls')
+    ing=""
+    esp=""
+    word=""
+    trlns=""
+    dicci_form=forms.DiccionarioForm(request.form)
+    if request.method=='POST':
+        if request.form['buttonV'] == "btnGuardar":
+            ing=dicci_form.en.data
+            esp=dicci_form.es.data
+            obj=saveDiccionaro(ing, esp)
+            obj.dicciG()
+        if request.form['buttonV'] == "btnConsultar":
+            word=dicci_form.pal.data
+            r=dicci_form.idioma.data
+            obj=readDiccionaro(word,r)
+            trlns = obj.dicciG()
+    return render_template("diccionario.html", form=dicci_form, trlns=trlns)
 
 if __name__ == "__main__":
     app.run(debug=True)

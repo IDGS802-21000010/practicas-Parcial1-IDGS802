@@ -1,0 +1,22 @@
+
+{% extends "layout.html" %}
+{% block content %}
+
+{%import "_macros.html" as macros%}
+        <h1>Diccionario</h1>
+        <form action="" method="post" novalidate>
+
+            {{macros.input_Form(form.en,class="form-control")}}
+            {{macros.input_Form(form.es,class="form-control")}}
+
+            <button type="submit" name="buttonV" value="btnGuardar" id="btnGuardar">Guardar</button>
+
+            <p></p>
+             
+            {{macros.input_Form(form.idioma,class="form-control")}}
+            {{macros.input_Form(form.pal,class="form-control")}}
+            <button type="submit" name="buttonV" value="btnConsultar" id="btnConsultar">Consultar</button>
+            <h4>Traduccion: {{trlns}}</h4>
+            
+        </form>
+{% endblock%}
